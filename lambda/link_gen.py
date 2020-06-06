@@ -40,18 +40,22 @@ TO = "to"
 
 # Going to require a minimum of a message and recipient
 def lambda_handler(event, context):
-    body: dict = json.loads(event.body)
+    body: dict = event.get("body")#json.loads(event.get("body"))
     message: str = body.get(MESSAGE, "")
+    subject: str = body.get(SUBJECT, "")
 
     for symbol in url_codes:
         message = message.replace(symbol, "%"+url_codes[symbol])
 
+    for symbol in url_codes:
+        subject = subject.replace(symbol, "%"+url_codes[symbol])
+
     link: str = "mailto:" + body.get(TO) + "?" + SUBJECT + "=" + body.get(SUBJECT) + VAR_CONCATENATOR + MESSAGE + "=" + message
 
-    if CC in body.keys:
+    if CC in body:
         link += VAR_CONCATENATOR + CC + "=" + body.get(CC)
 
-    if BCC in body.keys:
+    if BCC in body:
         link += VAR_CONCATENATOR + BCC + "=" + body.get(BCC)
 
     
@@ -60,5 +64,5 @@ def lambda_handler(event, context):
 
     return {
         'statusCode': 200,
-        'body': json.dumps(response)
+        'body': json.dumps(response.text)
     }
