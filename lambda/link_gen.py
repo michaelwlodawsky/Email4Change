@@ -60,9 +60,14 @@ def lambda_handler(event, context):
 
     
     response = requests.get("http://tinyurl.com/api-create.php?url=" + link)
-    
 
-    return {
-        'statusCode': 200,
-        'body': response.text
-    }
+    if response.status_code != 200:
+        return {
+            'statusCode': 500
+            'body': "Sorry, there was an error retreiving the link"
+        }
+    else:
+        return {
+            'statusCode': 200,
+            'body': response.text
+        }
