@@ -5,7 +5,6 @@ import requests
 url_codes = {
     " ": "20",
     "\n": "0A",
-    "%": "25",
     "$": "24",
     "&": "26",
     "+": "2B",
@@ -31,6 +30,9 @@ url_codes = {
     "`": "60"
 }
 
+PERCENT = "%"
+PERCENT_ENCODING = "%25"
+
 VAR_CONCATENATOR = "&"
 CC = "cc"
 BCC = "bcc"
@@ -40,30 +42,34 @@ TO = "to"
 
 # Going to require a minimum of a message and recipient
 def lambda_handler(event, context):
-    body: dict = event.get("body")#json.loads(event.get("body"))
-    message: str = body.get(MESSAGE, "")
-    subject: str = body.get(SUBJECT, "")
+    message: str = event.get(MESSAGE, "")
+    subject: str = event.get(SUBJECT, "")
+
+    # Check for percent signs first, because percent signs will be used to encode the rest of the URL
+    message = message.replace(PERCENT, PERCENT_ENCODING)
+    subject = subject.replace(PERCENT, PERCENT_ENCODING)
+
 
     for symbol in url_codes:
-        message = message.replace(symbol, "%"+url_codes[symbol])
+       message = message.replace(symbol, "%"+url_codes[symbol])
 
     for symbol in url_codes:
-        subject = subject.replace(symbol, "%"+url_codes[symbol])
+       subject = subject.replace(symbol, "%"+url_codes[symbol])
 
-    link: str = "mailto:" + body.get(TO) + "?" + SUBJECT + "=" + body.get(SUBJECT) + VAR_CONCATENATOR + MESSAGE + "=" + message
+    link: str = "mailto:" + event.get(TO) + "?" + SUBJECT + "=" + subject + VAR_CONCATENATOR + MESSAGE + "=" + message
 
-    if CC in body:
-        link += VAR_CONCATENATOR + CC + "=" + body.get(CC)
+    if CC in event:
+        link += VAR_CONCATENATOR + CC + "=" + event.get(CC)
 
-    if BCC in body:
-        link += VAR_CONCATENATOR + BCC + "=" + body.get(BCC)
+    if BCC in event:
+        link += VAR_CONCATENATOR + BCC + "=" + event.get(BCC)
 
     
     response = requests.get("http://tinyurl.com/api-create.php?url=" + link)
 
     if response.status_code != 200:
         return {
-            'statusCode': 500
+            'statusCode': 500,
             'body': "Sorry, there was an error retreiving the link"
         }
     else:
