@@ -27,25 +27,50 @@ const IndexPage = () => (
     </h2>
     <form>
       <div>
-        <Input id="recepients" label="Email Recepient(s):"/>
-        <button>+</button>
+        <label>
+          Email Recepient(s):
+          <input type="text" name="to"></input>
+          <button>+</button>
+        </label>
       </div>
       <div>
-        <Input id="cc" label="CC Recepient(s):"/>
-        <button>+</button>
+        <label>
+          CC Recepient(s):
+          <input type="text" name="cc"></input>
+          <button>+</button>
+        </label>
       </div>
       <div>
-        <Input id="bcc" label="BCC Recepient(s):"/>
-        <button>+</button>
+        <label>
+          BCC Recepient(s):
+          <input type="text" name="bcc"></input>
+          <button>+</button>
+        </label>
       </div>
       <div>
-        <Input id="subject" label="Subject:"/>
+        <label>
+          Email Recepient(s):
+          <input type="text" name="recepients"></input>
+          <button>+</button>
+        </label>
       </div>
       <div>
-        <Input id="body" label="Message Body:"/>
+        <label>
+          Subject:
+          <input type="text" name="subject"></input>
+        </label>
       </div>
       <div>
-        <Input id="email" label="Your email (to send the link for safe keeping):"/>
+        <label>
+          Body:
+          <input type="text" name="body"></input>
+        </label>
+      </div>
+      <div>
+        <label>
+          Your Email (to send the link for safe keeping):
+          <input type="text" name="email"></input>
+        </label>
       </div>
       <button type="submit">Get your link!</button>
     </form>
