@@ -20,7 +20,8 @@ export default class IndexPage extends React.Component {
     bcc: [],
     subject: "",
     body: "",
-    email: ""
+    email: "",
+    link: ""
  }
 
  generateLink = event => {
@@ -38,12 +39,15 @@ export default class IndexPage extends React.Component {
       body: JSON.stringify(data),
       headers: {
         'Content-type': 'application/json; charset=UTF-8'
+        // TODO: Probably add API Key or somethign to the headers for CORS Securtiy
       },
       mode: 'cors'
     }).then(
       (result) => {
-        console.log(result)
-        console.log(result.body.url)
+        result.json().then(data => {
+          console.log(data)
+          this.state.link = data.body
+        })
       }
     )
    } catch (err) {
@@ -137,7 +141,7 @@ export default class IndexPage extends React.Component {
                   value={this.state.currentCC}
                   onChange={this.onSetupInput}></input>
                 <button
-                  type="reset"
+                  type="button"
                   name={CC}
                   value={this.state.currentCC}
                   onClick={this.onAddInput}>+</button>
@@ -194,6 +198,7 @@ export default class IndexPage extends React.Component {
               type="button"
               onClick={this.generateLink}>Get your link!</button>
           </form>
+          {this.state.link}
         </div>
     )
   }
