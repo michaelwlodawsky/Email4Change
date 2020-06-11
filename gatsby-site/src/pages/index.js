@@ -1,4 +1,5 @@
 import React from "react"
+import ListButton from "../components/list_button"
 
 const TO = "to"
 const CC = "cc"
@@ -66,8 +67,42 @@ export default class IndexPage extends React.Component {
    })
  }
 
+ 
+
+ removeElement = event => {
+   console.log("WE ACTUALLY REMOVING ELEMENTS")
+   console.log(event.target)
+   console.log(event.target.value)
+   const target = event.target
+   const index = target.value
+   const inputName = target.name
+   var newValue = []
+
+
+   switch (inputName) {
+    case TO:
+      console.log(this.state.to)
+      newValue = this.state.to.splice(index, 1)
+      console.log(newValue)
+      break;
+    case CC:
+      newValue = this.state.cc.slice(index, 1)
+      break;
+    case BCC:
+      newValue = this.state.bcc.slice(index, 1)
+      break;
+    default:
+      break;
+ }
+
+   this.setState({
+     [inputName]: newValue
+   })
+ }
+
  onAddInput = event => {
    const target = event.target
+   console.log(target)
    const value = target.value
    const inputName = target.name
    var newValue = []
@@ -92,6 +127,8 @@ export default class IndexPage extends React.Component {
    this.setState({
      [inputName]: newValue
    })
+
+   
  }
 
   render() {
@@ -131,7 +168,7 @@ export default class IndexPage extends React.Component {
                   onClick={this.onAddInput}>+</button>
               </label>
             </div>
-            {this.state.to}
+            <ListButton list={this.state.to} removeElement={this.removeElement} name="to"></ListButton>
             <div>
               <label>
                 CC Recepient(s):
@@ -147,7 +184,7 @@ export default class IndexPage extends React.Component {
                   onClick={this.onAddInput}>+</button>
               </label>
             </div>
-            {this.state.cc}
+            <ListButton list={this.state.cc}></ListButton>
             <div>
               <label>
                 BCC Recepient(s):
@@ -163,7 +200,7 @@ export default class IndexPage extends React.Component {
                   onClick={this.onAddInput}>+</button>
               </label>
             </div>
-            {this.state.bcc}
+            <ListButton list={this.state.bcc}></ListButton>
             <div>
               <label>
                 Subject:
