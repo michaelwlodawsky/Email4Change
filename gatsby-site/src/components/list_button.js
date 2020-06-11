@@ -9,7 +9,6 @@ export default function ListButton({list, removeElement, name}) {
 
     return (
         <div>
-            {list}
             {list.map((item, index) => (
                 <button 
                 key={index}

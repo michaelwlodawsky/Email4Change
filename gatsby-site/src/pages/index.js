@@ -79,25 +79,28 @@ export default class IndexPage extends React.Component {
    var newValue = []
 
 
-   switch (inputName) {
-    case TO:
-      console.log(this.state.to)
-      newValue = this.state.to.splice(index, 1)
-      console.log(newValue)
-      break;
-    case CC:
-      newValue = this.state.cc.slice(index, 1)
-      break;
-    case BCC:
-      newValue = this.state.bcc.slice(index, 1)
-      break;
-    default:
-      break;
- }
-
-   this.setState({
-     [inputName]: newValue
-   })
+    switch (inputName) {
+      case TO:
+        this.state.to.splice(index, 1)
+        this.setState({
+          [inputName]: this.state.to
+        })
+        break;
+      case CC:
+        this.state.cc.splice(index, 1)
+        this.setState({
+          [inputName]: this.state.cc
+        })
+        break;
+      case BCC:
+        this.state.bcc.splice(index, 1)
+        this.setState({
+          [inputName]: this.state.bcc
+        })
+        break;
+      default:
+        break;
+    }
  }
 
  onAddInput = event => {
@@ -168,7 +171,7 @@ export default class IndexPage extends React.Component {
                   onClick={this.onAddInput}>+</button>
               </label>
             </div>
-            <ListButton list={this.state.to} removeElement={this.removeElement} name="to"></ListButton>
+            <ListButton list={this.state.to} removeElement={this.removeElement} name={TO}></ListButton>
             <div>
               <label>
                 CC Recepient(s):
@@ -184,7 +187,7 @@ export default class IndexPage extends React.Component {
                   onClick={this.onAddInput}>+</button>
               </label>
             </div>
-            <ListButton list={this.state.cc}></ListButton>
+            <ListButton list={this.state.cc} removeElement={this.removeElement} name={CC}></ListButton>
             <div>
               <label>
                 BCC Recepient(s):
@@ -200,7 +203,7 @@ export default class IndexPage extends React.Component {
                   onClick={this.onAddInput}>+</button>
               </label>
             </div>
-            <ListButton list={this.state.bcc}></ListButton>
+            <ListButton list={this.state.bcc} removeElement={this.removeElement} name={BCC}></ListButton>
             <div>
               <label>
                 Subject:
