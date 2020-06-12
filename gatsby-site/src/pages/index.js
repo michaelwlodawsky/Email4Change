@@ -1,5 +1,6 @@
 import React from "react"
 import ListButton from "../components/list_button"
+import IntroPage from "../components/intro"
 
 const TO = "to"
 const CC = "cc"
@@ -136,10 +137,16 @@ export default class IndexPage extends React.Component {
 
   render() {
     return (
-      <div style={{
+      <div>
+        <IntroPage></IntroPage>
+        <div style={{
           maxWidth: '750px',
-          margin: `auto`
+          margin: `auto`,
+          display: 'flex',
+          justifyContent: 'center',
+          flexDirection: 'column'
         }}>
+          
           <h1 style={{
             textAlign: 'center'
           }}>
@@ -240,6 +247,7 @@ export default class IndexPage extends React.Component {
           </form>
           {this.state.link}
         </div>
+      </div>
     )
   }
   
