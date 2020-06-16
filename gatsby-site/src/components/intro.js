@@ -1,21 +1,31 @@
 import React from 'react'
-import Link from 'gatsby'
-import ModalRoutingContext from 'gatsby-plugin-modal-routing'
-import { render } from 'react-dom'
+import styles from '../pages/custom_layouts.module.css'
 
+const INNERMODAL = "innerModal"
+const OUTTERMODAL = "outerModal"
+const DISMISS = "dismiss"
 
 export default function IntroPage() {
+    const dismiss = () => {
+        //document.getElementById(OUTTERMODAL).classList.toggle("")
+        // TODO: setup like code above to switch between the outtermodal setup and the dismiss setup when the user clicks
+        // the x button on the intro with the terms and conditions
+    }
+    // {
+    //     position: 'absolute',
+    //     zIndex: '5',
+    //     width: '100%',
+    //     height: '100%',
+    //     left: '0px',
+    //     top: '0px',
+    //     backgroundColor: 'rgba(0, 0, 0, .5)',
+    //     justifyContent: 'center'
+    // }
+
     return(
-        <div style={{
-                position: 'absolute',
-                zIndex: '5',
-                width: '100%',
-                height: '100%',
-                left: '0px',
-                top: '0px',
-                backgroundColor: 'rgba(0, 0, 0, .5)',
-                justifyContent: 'center'
-            }}>
+        <div
+            id={OUTTERMODAL}
+            className={styles.OUTTERMODAL}>
                 <div style={{
                     zIndex: '10',
                     height: '600px',
