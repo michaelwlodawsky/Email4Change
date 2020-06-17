@@ -1,44 +1,33 @@
 import React from 'react'
-import styles from '../pages/custom_layouts.module.css'
+import styles from './custom.module.css'
 
-const INNERMODAL = "innerModal"
-const OUTTERMODAL = "outerModal"
+const INNERMODAL = "innerModal-id"
+const OUTTERMODAL = "outterModal-id"
 const DISMISS = "dismiss"
 
 export default function IntroPage() {
     const dismiss = () => {
-        //document.getElementById(OUTTERMODAL).classList.toggle("")
+        document.getElementById(OUTTERMODAL).classList.toggle(styles.outterModal)
+        document.getElementById(OUTTERMODAL).classList.toggle(styles.dismiss)
+
+
+        //document.getElementById(INNERMODAL).classList.toggle(INNERMODAL)
+        //document.getElementById(INNERMODAL).classList.toggle(DISMISS) 
         // TODO: setup like code above to switch between the outtermodal setup and the dismiss setup when the user clicks
         // the x button on the intro with the terms and conditions
     }
-    // {
-    //     position: 'absolute',
-    //     zIndex: '5',
-    //     width: '100%',
-    //     height: '100%',
-    //     left: '0px',
-    //     top: '0px',
-    //     backgroundColor: 'rgba(0, 0, 0, .5)',
-    //     justifyContent: 'center'
-    // }
 
     return(
         <div
             id={OUTTERMODAL}
-            className={styles.OUTTERMODAL}>
-                <div style={{
-                    zIndex: '10',
-                    height: '600px',
-                    width: '600px',
-                    backgroundColor: 'white',
-                    margin: 'auto',
-                    marginTop: '25px',
-                    overflow: 'scroll'
-                }}>
+            className={styles.outterModal}>
+                <div
+                    id={INNERMODAL} 
+                    className={styles.innerModal}>
                     <div style={{
                         textAlign: 'right'
                     }}>
-                        <button>
+                        <button onClick={dismiss}>
                             x
                         </button>          
                     </div>
