@@ -1,9 +1,9 @@
 import React from 'react'
 import styles from './custom.module.css'
 
-const INNERMODAL = "innerModal-id"
-const OUTTERMODAL = "outterModal-id"
-const DISMISS = "dismiss"
+export const INNERMODAL = "innerModal-id"
+export const OUTTERMODAL = "outterModal-id"
+
 
 export default function IntroPage() {
     const dismiss = () => {

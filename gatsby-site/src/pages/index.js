@@ -1,6 +1,10 @@
 import React from "react"
 import ListButton from "../components/list_button"
 import IntroPage from "../components/intro"
+import LinkModal from "../components/link"
+import {toggle} from "../components/link"
+import { Link } from "gatsby"
+import styles from "../components/custom.module.css"
 
 const TO = "to"
 const CC = "cc"
@@ -11,7 +15,7 @@ const EMAIL = "email"
 const API_URL = "https://dutuq6mkaf.execute-api.us-east-2.amazonaws.com/PROD"
 
 export default class IndexPage extends React.Component {
-
+  
 
   state = {
     currentTo: "",
@@ -23,7 +27,14 @@ export default class IndexPage extends React.Component {
     subject: "",
     body: "",
     email: "",
-    link: ""
+    link: "",
+    linkViewStyle: styles.dismiss
+ }
+
+ showLinkView = (style) => {
+   this.setState({
+     linkViewStyle: style
+   })
  }
 
  generateLink = event => {
@@ -48,14 +59,16 @@ export default class IndexPage extends React.Component {
       (result) => {
         result.json().then(data => {
           console.log(data)
-          this.state.link = data.body
+          this.setState({
+            link: data.body,
+          })
+          this.showLinkView(styles.outterModal)
         })
       }
     )
    } catch (err) {
      alert(`Error Generating Link from Server: Code ${err.code}`)
    }
-
  }
 
  onSetupInput = event => {
@@ -71,13 +84,11 @@ export default class IndexPage extends React.Component {
  
 
  removeElement = event => {
-   console.log("WE ACTUALLY REMOVING ELEMENTS")
    console.log(event.target)
    console.log(event.target.value)
    const target = event.target
    const index = target.value
    const inputName = target.name
-   var newValue = []
 
 
     switch (inputName) {
@@ -136,8 +147,10 @@ export default class IndexPage extends React.Component {
  }
 
   render() {
+    var link = ""
     return (
-      <div>
+      <div
+        id="main">
         <IntroPage></IntroPage>
         <div style={{
           maxWidth: '750px',
@@ -245,7 +258,7 @@ export default class IndexPage extends React.Component {
               type="button"
               onClick={this.generateLink}>Get your link!</button>
           </form>
-          {this.state.link}
+        <LinkModal style={this.state.linkViewStyle} toggle={this.showLinkView} link={this.state.link}></LinkModal>
         </div>
       </div>
     )
