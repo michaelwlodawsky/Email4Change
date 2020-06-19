@@ -7,13 +7,12 @@ export default function ToolTip({children, text}) {
     return (
         <div style={{
             display: 'flex',
-            flexDirection: 'row',
-            
+            flexDirection: 'row', 
         }}>
             <div onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
                 {children}
             </div>
-            <div className={styles.tooltip} style={show ? {display: 'flex', order: '-1'} : {}}>
+            <div className={styles.tooltip} style={show ? {display: 'flex', order: '1000'} : {}}>
                 {text}
             </div>
             

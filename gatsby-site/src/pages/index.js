@@ -30,123 +30,126 @@ export default class IndexPage extends React.Component {
     email: "",
     link: "",
     linkViewStyle: styles.dismiss
- }
+  }
 
- showLinkView = (style) => {
-   this.setState({
-     linkViewStyle: style
-   })
- }
+  showLinkView = (style) => {
+    this.setState({
+      linkViewStyle: style
+    })
+  }
 
- generateLink = event => {
-   const data = {
-     "to": this.state.to.toString(),
-     "cc": this.state.cc.toString(),
-     "bcc": this.state.bcc.toString(),
-     "subject": this.state.subject,
-     "body": this.state.body,
-     "email": this.state.email
-   }
-   try {
-    fetch(API_URL, {
-      method: 'POST',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8'
-        // TODO: Probably add API Key or somethign to the headers for CORS Securtiy
-      },
-      mode: 'cors'
-    }).then(
-      (result) => {
-        result.json().then(data => {
-          console.log(data)
-          this.setState({
-            link: data.body,
+  generateLink = event => {
+    const data = {
+      "to": this.state.to.toString(),
+      "cc": this.state.cc.toString(),
+      "bcc": this.state.bcc.toString(),
+      "subject": this.state.subject,
+      "body": this.state.body,
+      "email": this.state.email
+    }
+    try {
+      fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8'
+          // TODO: Probably add API Key or somethign to the headers for CORS Securtiy
+        },
+        mode: 'cors'
+      }).then(
+        (result) => {
+          result.json().then(data => {
+            console.log(data)
+            this.setState({
+              link: data.body,
+            })
+            this.showLinkView(styles.outterModal)
           })
-          this.showLinkView(styles.outterModal)
-        })
+        }
+      )
+    } catch (err) {
+      alert(`Error Generating Link from Server: Code ${err.code}`)
+    }
+  }
+
+  onSetupInput = event => {
+    const target = event.target
+    const value = target.value
+    const inputName = target.name
+
+    this.setState({
+      [inputName]: value
+    })
+  }
+
+  
+
+  removeElement = event => {
+    console.log(event.target)
+    console.log(event.target.value)
+    const target = event.target
+    const index = target.value
+    const inputName = target.name
+
+
+      switch (inputName) {
+        case TO:
+          this.state.to.splice(index, 1)
+          this.setState({
+            [inputName]: this.state.to
+          })
+          break;
+        case CC:
+          this.state.cc.splice(index, 1)
+          this.setState({
+            [inputName]: this.state.cc
+          })
+          break;
+        case BCC:
+          this.state.bcc.splice(index, 1)
+          this.setState({
+            [inputName]: this.state.bcc
+          })
+          break;
+        default:
+          break;
       }
-    )
-   } catch (err) {
-     alert(`Error Generating Link from Server: Code ${err.code}`)
-   }
- }
+  }
 
- onSetupInput = event => {
-   const target = event.target
-   const value = target.value
-   const inputName = target.name
+  onAddInput = event => {
+    const target = event.target
+    console.log(target)
+    const value = target.value
+    const inputName = target.name
+    var newValue = []
 
-   this.setState({
-     [inputName]: value
-   })
- }
-
- 
-
- removeElement = event => {
-   console.log(event.target)
-   console.log(event.target.value)
-   const target = event.target
-   const index = target.value
-   const inputName = target.name
-
+    // TODO: Check validity of email?
 
     switch (inputName) {
-      case TO:
-        this.state.to.splice(index, 1)
-        this.setState({
-          [inputName]: this.state.to
-        })
-        break;
-      case CC:
-        this.state.cc.splice(index, 1)
-        this.setState({
-          [inputName]: this.state.cc
-        })
-        break;
-      case BCC:
-        this.state.bcc.splice(index, 1)
-        this.setState({
-          [inputName]: this.state.bcc
-        })
-        break;
-      default:
-        break;
+        case TO:
+          newValue = this.state.to.concat(value)
+          break;
+        case CC:
+          newValue = this.state.cc.concat(value)
+          break;
+        case BCC:
+          newValue = this.state.bcc.concat(value)
+          break;
+        default:
+          break;
     }
- }
-
- onAddInput = event => {
-   const target = event.target
-   console.log(target)
-   const value = target.value
-   const inputName = target.name
-   var newValue = []
-
-   // TODO: Check validity of email?
-
-   switch (inputName) {
-      case TO:
-        newValue = this.state.to.concat(value)
-        break;
-      case CC:
-        newValue = this.state.cc.concat(value)
-        break;
-      case BCC:
-        newValue = this.state.bcc.concat(value)
-        break;
-      default:
-        break;
-   }
 
 
-   this.setState({
-     [inputName]: newValue
-   })
+    this.setState({
+      [inputName]: newValue
+    })
 
-   
- }
+    
+  }
+  
 
+  // TODO: Add cookies to keep track if the user has agreed to the terms and conditions and to keep track of the data they put in the input fields
+  // Keeping track of the input fields is to make sure the info is still populated when they check the "how does this work link"
   render() {
     return (
       <div
@@ -247,26 +250,37 @@ export default class IndexPage extends React.Component {
             <div>
               <label style={{
                 display: 'flex',
-                flexDirection: 'row',
-                position: 'initial'
+                flexDirection: 'row'
               }}>
-                <ToolTip text="We want your email to send you a copy of your generated link. We do NOT save your email!">
-                  <label>info</label>
-                </ToolTip>
-                Your Email (to send the link for safe keeping):
+                
+                Your Email:
                 <input 
                   type="text" 
                   name={EMAIL}
                   value={this.state.email}
                   onChange={this.onSetupInput}></input>
+                <ToolTip text="We want your email to send you a copy of your generated link. We do NOT save your email!">
+                  {/* TODO: Replace with info png */}
+                  <label>info</label>
+                </ToolTip>
               </label>
             </div>
             <div>
-              <label>
+              <label style={{
+                display: 'flex',
+                flexDirection: 'row'
+              }}>
                 Do you want to enable customizable emails?
                 {/* TODO: Capture input from checkbox to send to the lambda to determine what link to generate. */}
                 <input type="checkbox"></input>
+                <ToolTip text="This will help particpants create custom emails to send. Check the 'How do custom emails work?' link to learn more!">
+                    {/* TODO: Replace with info png */}
+                    <label>info</label>
+                </ToolTip>
               </label>
+            </div>
+            <div>
+              <Link to="/howCustomEmailsWork/">How do custom emails work?</Link>
             </div>
             <button 
               type="button"
