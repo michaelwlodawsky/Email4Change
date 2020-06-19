@@ -15,7 +15,8 @@ export default function LinkModal({style, toggle, link}) {
     return (
         <div
             id={MODAL}
-            className={style}>
+            className={style}
+            onClick={dismiss}>
                 <div 
                     className={styles.innerModal}>
                         <h1

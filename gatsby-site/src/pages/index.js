@@ -2,6 +2,7 @@ import React from "react"
 import ListButton from "../components/list_button"
 import IntroPage from "../components/intro"
 import LinkModal from "../components/link"
+import ToolTip from "../components/tooltip"
 import {toggle} from "../components/link"
 import { Link } from "gatsby"
 import styles from "../components/custom.module.css"
@@ -147,7 +148,6 @@ export default class IndexPage extends React.Component {
  }
 
   render() {
-    var link = ""
     return (
       <div
         id="main">
@@ -245,13 +245,27 @@ export default class IndexPage extends React.Component {
               </label>
             </div>
             <div>
-              <label>
+              <label style={{
+                display: 'flex',
+                flexDirection: 'row',
+                position: 'initial'
+              }}>
+                <ToolTip text="We want your email to send you a copy of your generated link. We do NOT save your email!">
+                  <label>info</label>
+                </ToolTip>
                 Your Email (to send the link for safe keeping):
                 <input 
                   type="text" 
                   name={EMAIL}
                   value={this.state.email}
                   onChange={this.onSetupInput}></input>
+              </label>
+            </div>
+            <div>
+              <label>
+                Do you want to enable customizable emails?
+                {/* TODO: Capture input from checkbox to send to the lambda to determine what link to generate. */}
+                <input type="checkbox"></input>
               </label>
             </div>
             <button 
