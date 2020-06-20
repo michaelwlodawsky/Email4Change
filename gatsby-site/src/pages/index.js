@@ -29,7 +29,15 @@ export default class IndexPage extends React.Component {
     body: "",
     email: "",
     link: "",
-    linkViewStyle: styles.dismiss
+    linkViewStyle: styles.dismiss,
+    customEmail: false
+  }
+
+  toggleCustomEmail = (event) => {
+    let newVal = !this.state.customEmail
+    this.setState({
+       customEmail: newVal
+    })
   }
 
   showLinkView = (style) => {
@@ -45,15 +53,17 @@ export default class IndexPage extends React.Component {
       "bcc": this.state.bcc.toString(),
       "subject": this.state.subject,
       "body": this.state.body,
-      "email": this.state.email
+      "email": this.state.email,
+      "customEmail": this.state.customEmail
     }
+
     try {
       fetch(API_URL, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
           'Content-type': 'application/json; charset=UTF-8'
-          // TODO: Probably add API Key or somethign to the headers for CORS Securtiy
+          // TODO: Probably add API Key or somethign to the headers for CORS Securtiy, Netlify has tools for Env Vars to store it there
         },
         mode: 'cors'
       }).then(
@@ -272,7 +282,7 @@ export default class IndexPage extends React.Component {
               }}>
                 Do you want to enable customizable emails?
                 {/* TODO: Capture input from checkbox to send to the lambda to determine what link to generate. */}
-                <input type="checkbox"></input>
+                <input type="checkbox" onChange={this.toggleCustomEmail}></input>
                 <ToolTip text="This will help particpants create custom emails to send. Check the 'How do custom emails work?' link to learn more!">
                     {/* TODO: Replace with info png */}
                     <label>info</label>
