@@ -1,5 +1,6 @@
 import json
 import requests
+import boto3
 
 # Codes for special characters that could be in an email body
 url_codes = {
@@ -39,6 +40,8 @@ BCC = "bcc"
 SUBJECT = "subject"
 MESSAGE = "body"
 TO = "to"
+EMAIL = "email"
+CUSTOM_EMAIL = "customEmail"
 
 # Going to require a minimum of a message and recipient
 def lambda_handler(event, context):
@@ -56,7 +59,10 @@ def lambda_handler(event, context):
     for symbol in url_codes:
        subject = subject.replace(symbol, "%"+url_codes[symbol])
 
-    link: str = "mailto:" + event.get(TO) + "?" + SUBJECT + "=" + subject + VAR_CONCATENATOR + MESSAGE + "=" + message
+    link: str = "mailto:" + event.get(TO) + "?" + MESSAGE + "=" + message
+
+    if SUBJECT in event:
+        link += VAR_CONCATENATOR + SUBJECT + "=" + subject
 
     if CC in event:
         link += VAR_CONCATENATOR + CC + "=" + event.get(CC)
@@ -70,7 +76,7 @@ def lambda_handler(event, context):
     if response.status_code != 200:
         return {
             'statusCode': 500,
-            'body': "Sorry, there was an error retreiving the link"
+            'body': "Sorry, there was an error retreiving the link."
         }
     else:
         return {
