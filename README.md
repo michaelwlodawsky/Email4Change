@@ -1,6 +1,12 @@
 # Email4Change
 A politician will answer to 400 emails more than they will 10,000 names on a single petition.
 
+# If Gatsby is giving you shit regarding any modules
+
+```shell
+rm -rf node_modules package-lock.json ; yarn install
+```
+
 # Command to add dependency to lambda function
 `pip install --target ./package <dependency name>`
 
