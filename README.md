@@ -39,7 +39,7 @@ TODO
 Note: You will need your lambda(s) setup in order to complete this step.<br>
 TODO
 
-## Help Quick-Guide
+## Quick Help Guide
 
 ### If Gatsby is giving issues regarding missing modules
 
