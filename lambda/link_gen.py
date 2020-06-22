@@ -1,6 +1,12 @@
 import json
 import requests
 import boto3
+import pymysql
+import logging
+import rds_config
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 # Codes for special characters that could be in an email body
 url_codes = {
@@ -47,6 +53,7 @@ CUSTOM_EMAIL = "customEmail"
 def lambda_handler(event, context):
     message: str = event.get(MESSAGE, "")
     subject: str = event.get(SUBJECT, "")
+    isCustomEmail: bool = event.get(CUSTOM_EMAIL, False)
 
     # Check for percent signs first, because percent signs will be used to encode the rest of the URL
     message = message.replace(PERCENT, PERCENT_ENCODING)
@@ -70,16 +77,33 @@ def lambda_handler(event, context):
     if BCC in event:
         link += VAR_CONCATENATOR + BCC + "=" + event.get(BCC)
 
-    
-    response = requests.get("http://tinyurl.com/api-create.php?url=" + link)
+    if isCustomEmail:
+        try:
+            rds_host = rds_config.db_endpoint
+            username = rds_config.db_username
+            password = rds_config.db_password
+            db_name = rds_config.db_name
+            connection = pymysql.connect(rds_host, user=username, passwd=password, db=db_name, connect_timeout=5)
+        except pymysql.MySQLError as err:
+            logger.error("Couldn't connect to MySQL database on RDS.")
+            logger.error(err)
+            return {
+                'statusCode': 500,
+                'body': 'Sorry, there was an error connecting the the RDS instance.'
+            }
 
-    if response.status_code != 200:
-        return {
-            'statusCode': 500,
-            'body': "Sorry, there was an error retreiving the link."
-        }
+        logger.info("Connected to rds successfully")
+
     else:
-        return {
-            'statusCode': 200,
-            'body': response.text
-        }
+        response = requests.get("http://tinyurl.com/api-create.php?url=" + link)
+
+        if response.status_code != 200:
+            return {
+                'statusCode': 500,
+                'body': "Sorry, there was an error retreiving the generated link from tinyurl."
+            }
+        else:
+            return {
+                'statusCode': 200,
+                'body': response.text
+            }
